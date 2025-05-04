@@ -1,0 +1,13 @@
+flutter:
+  assets:
+    - assets/uptodo.png
+flutter_native_splash:
+  color:  "#ffffff"
+  android: true
+  ios: true
+  web: true
+#  background_image: "assets/uptodo.png"
+  background_image: "assets/uptodo.png"
+  image:  "assets/uptodo.png"
+  branding: "assets/uptodo.png"
+
