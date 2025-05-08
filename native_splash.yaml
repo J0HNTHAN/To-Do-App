@@ -8,6 +8,6 @@ flutter_native_splash:
   web: true
 #  background_image: "assets/uptodo.png"
   # background_image: "assets/uptodo.png"
-  image:  "notes_upscaled.png"
+  image:  "splash_screen_image.png"
   # branding: "assets/uptodo.png"
 
