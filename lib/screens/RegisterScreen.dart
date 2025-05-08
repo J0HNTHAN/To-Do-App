@@ -1,223 +1,240 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'LoginScreen.dart';
 
-class RegisterScreen extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  String? _selectedCountry;
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _nameController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _handleSignUp() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      Navigator.pushReplacementNamed(context, '/home');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Register'),
-        backgroundColor: Colors.grey,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => LoginScreen(),
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                  const begin = Offset(-1.0, 0.0);
-                  const end = Offset.zero;
-                  const curve = Curves.easeInOut;
-                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-                  return SlideTransition(
-                    position: animation.drive(tween),
-                    child: child,
-                  );
-                },
-                transitionDuration: Duration(milliseconds: 300),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  SizedBox(height: constraints.maxHeight * 0.08),
+                  Image.asset(
+                    "loggg.jpg",
+                    height: 100,
+                  ),
+                  SizedBox(height: constraints.maxHeight * 0.08),
+                  Text(
+                    "إنشاء حساب جديد",
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: constraints.maxHeight * 0.05),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                            hintText: 'الاسم الكامل',
+                            filled: true,
+                            fillColor: Color(0xFFF5FCF9),
+                            prefixIcon: Icon(Icons.person),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0 * 1.5,
+                              vertical: 16.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'الرجاء إدخال الاسم الكامل';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _phoneController,
+                          decoration: const InputDecoration(
+                            hintText: 'رقم الهاتف',
+                            filled: true,
+                            fillColor: Color(0xFFF5FCF9),
+                            prefixIcon: Icon(Icons.phone),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0 * 1.5,
+                              vertical: 16.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                            ),
+                          ),
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'الرجاء إدخال رقم الهاتف';
+                            }
+                            if (value.length < 10) {
+                              return 'رقم الهاتف غير صحيح';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: !_isPasswordVisible,
+                          decoration: InputDecoration(
+                            hintText: 'كلمة المرور',
+                            filled: true,
+                            fillColor: const Color(0xFFF5FCF9),
+                            prefixIcon: const Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16.0 * 1.5,
+                              vertical: 16.0,
+                            ),
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'الرجاء إدخال كلمة المرور';
+                            }
+                            if (value.length < 6) {
+                              return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16.0),
+                        DropdownButtonFormField<String>(
+                          value: _selectedCountry,
+                          decoration: const InputDecoration(
+                            hintText: 'الدولة',
+                            filled: true,
+                            fillColor: Color(0xFFF5FCF9),
+                            prefixIcon: Icon(Icons.location_on),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0 * 1.5,
+                              vertical: 16.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                            ),
+                          ),
+                          items: [
+                            "السعودية",
+                            "الإمارات",
+                            "مصر",
+                            "الكويت",
+                            "البحرين",
+                            "عُمان",
+                            "قطر",
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'الرجاء اختيار الدولة';
+                            }
+                            return null;
+                          },
+                          onChanged: (String? value) {
+                            setState(() {
+                              _selectedCountry = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 24.0),
+                        ElevatedButton(
+                          onPressed: _handleSignUp,
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: const Color(0xFF00BF6D),
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size(double.infinity, 48),
+                            shape: const StadiumBorder(),
+                          ),
+                          child: const Text("تسجيل"),
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, '/login');
+                          },
+                          child: Text.rich(
+                            TextSpan(
+                              text: "لديك حساب بالفعل؟ ",
+                              children: const [
+                                TextSpan(
+                                  text: "سجل دخول",
+                                  style: TextStyle(color: Color(0xFF00BF6D)),
+                                ),
+                              ],
+                            ),
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             );
           },
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: 32.0),
-                  child: Image.asset(
-                    'registerr.png',
-                    width: 150,
-                    height: 150,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-
-                TextFormField(
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your username';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
-                    }
-                    if (value != _passwordController.text) {
-                      return 'Passwords do not match';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 24),
-
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      print('Registering user: ${_usernameController.text}');
-                      Navigator.pushReplacementNamed(context, '/home');
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[400],
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(9),
-                    ),
-                  ),
-                  child: Text(
-                    'Register',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-                SizedBox(height: 16),
-
-                Row(
-                  children: [
-                    Expanded(child: Divider(color: Colors.grey)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text('or', style: TextStyle(color: Colors.grey)),
-                    ),
-                    Expanded(child: Divider(color: Colors.grey)),
-                  ],
-                ),
-                SizedBox(height: 16),
-
-                OutlinedButton(
-                  onPressed: () {
-                    print('Registering with Google...');
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.blue),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset('google.png', width: 24, height: 24),
-                      SizedBox(width: 8),
-                      Text('Register with Google', style: TextStyle(fontSize: 16)),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 16),
-
-                OutlinedButton(
-                  onPressed: () {
-                    print('Registering with Apple...');
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.purple),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset('apple.png', width: 24, height: 24),
-                      SizedBox(width: 8),
-                      Text('Register with Apple', style: TextStyle(fontSize: 16)),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 24),
-
-                // Already have an account? Link
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Already have an account? ", style: TextStyle(color: Colors.grey)),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacementNamed(context, '/login');
-                      },
-                      child: Text(
-                        'Login',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

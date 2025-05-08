@@ -6,7 +6,7 @@ class TodoTile extends StatelessWidget {
   Function(bool?)? onChanged;
 
   TodoTile(
-      {required this.taskName,
+      {super.key, required this.taskName,
         required this.taskCompleted,
         required this.onChanged});
 

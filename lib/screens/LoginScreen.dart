@@ -1,183 +1,179 @@
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
+
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _handleSignIn() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      // في الواقع، هنا يجب التحقق من صحة بيانات تسجيل الدخول من الخادم
+      // لكن في هذا المثال سننتقل مباشرة إلى الصفحة الرئيسية
+      Navigator.pushReplacementNamed(context, '/home');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-        backgroundColor: Colors.grey,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: 32.0),
-                  child: Image.asset(
-                    'loggg.jpg',
-                    width: 170,
-                    height: 170,
-                    fit: BoxFit.contain,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  SizedBox(height: constraints.maxHeight * 0.1),
+                  Image.asset(
+                    "loggg.jpg",
+                    height: 100,
                   ),
-                ),
-
-                TextFormField(
-                  controller: _usernameController,
-                  decoration:
-                  InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
-                    hintText: 'Enter your Username',
-
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your username';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 24),
-
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      print('Logging in with username: ${_usernameController.text}');
-                      Navigator.pushReplacementNamed(context, '/home');
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[400],
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  SizedBox(height: constraints.maxHeight * 0.1),
+                  Text(
+                    "تسجيل الدخول",
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: Text(
-                    'Login',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-                SizedBox(height: 16),
-
-                Row(
-                  children: [
-                    Expanded(child: Divider(color: Colors.grey)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text('or', style: TextStyle(color: Colors.grey)),
-                    ),
-                    Expanded(child: Divider(color: Colors.grey)),
-                  ],
-                ),
-                SizedBox(height: 16),
-
-                OutlinedButton(
-                  onPressed: () {
-                    print('Logging in with Google...');
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.blue),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset('google.png', width: 24, height: 24),
-                      SizedBox(width: 8),
-                      Text('Login with Google', style: TextStyle(fontSize: 16)),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 16),
-
-                OutlinedButton(
-                  onPressed: () {
-                    print('Logging in with Apple...');
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.purple),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset('apple.png', width: 24, height: 24),
-                      SizedBox(width: 8),
-                      Text('Login with Apple', style: TextStyle(fontSize: 16)),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 24),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Don't have an account? ", style: TextStyle(color: Colors.grey)),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacementNamed(context, '/register');
-                      },
-                      child: Text(
-                        'Register',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
+                  SizedBox(height: constraints.maxHeight * 0.05),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _phoneController,
+                          decoration: const InputDecoration(
+                            hintText: 'رقم الهاتف',
+                            filled: true,
+                            fillColor: Color(0xFFF5FCF9),
+                            prefixIcon: Icon(Icons.phone),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0 * 1.5,
+                              vertical: 16.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                            ),
+                          ),
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'الرجاء إدخال رقم الهاتف';
+                            }
+                            if (value.length < 10) {
+                              return 'رقم الهاتف غير صحيح';
+                            }
+                            return null;
+                          },
                         ),
-                      ),
+                        const SizedBox(height: 16.0),
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: !_isPasswordVisible,
+                          decoration: InputDecoration(
+                            hintText: 'كلمة المرور',
+                            filled: true,
+                            fillColor: const Color(0xFFF5FCF9),
+                            prefixIcon: const Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16.0 * 1.5,
+                              vertical: 16.0,
+                            ),
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50),
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'الرجاء إدخال كلمة المرور';
+                            }
+                            if (value.length < 6) {
+                              return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 24.0),
+                        ElevatedButton(
+                          onPressed: _handleSignIn,
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: const Color(0xFF00BF6D),
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size(double.infinity, 48),
+                            shape: const StadiumBorder(),
+                          ),
+                          child: const Text("دخول"),
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextButton(
+                          onPressed: () {
+                            // TODO: Implement forgot password
+                          },
+                          child: Text(
+                            'نسيت كلمة المرور؟',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, '/register');
+                          },
+                          child: Text.rich(
+                            TextSpan(
+                              text: "ليس لديك حساب؟ ",
+                              children: const [
+                                TextSpan(
+                                  text: "سجل الآن",
+                                  style: TextStyle(color: Color(0xFF00BF6D)),
+                                ),
+                              ],
+                            ),
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
   }
-
 }
