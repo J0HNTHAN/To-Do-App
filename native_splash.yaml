@@ -7,7 +7,7 @@ flutter_native_splash:
   ios: true
   web: true
 #  background_image: "assets/uptodo.png"
-  background_image: "assets/uptodo.png"
-  image:  "assets/uptodo.png"
-  branding: "assets/uptodo.png"
+  # background_image: "assets/uptodo.png"
+  image:  "notes_upscaled.png"
+  # branding: "assets/uptodo.png"
 
